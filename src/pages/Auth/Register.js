@@ -3,6 +3,7 @@ import Layout from '../../components/Layout/Layout'
 import '../../styles/AuthStyles.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Register = () => {
 
@@ -11,22 +12,23 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
+    const [answer, setAnswer] = useState("");
 
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         try {
             e.preventDefault();
-            const res = await axios.post('http://localhost:8080/auth/register', { name, email, password, phone, address })
+            const res = await axios.post('/auth/register', { name, email, password, phone, address, answer })
             if (res.data.success) {
-                alert(res.data.message);
+                toast.success(res.data.message);
                 navigate('/login')
             } else {
-                alert(res.data.message);
+                toast.error(res.data.message);
             }
 
         } catch (error) {
-            alert.error("something went wrong")
+            toast.error("something went wrong")
         }
     }
 
@@ -51,6 +53,12 @@ const Register = () => {
                     <div className="mb-3">
                         <input type="text" placeholder='Address' value={address} className="form-control" id="exampleInputEmail1" onChange={(e) => setAddress(e.target.value)} />
                     </div>
+
+                    <div className="mb-3">
+                        <input type="text" placeholder='what is your favorite color' value={answer} className="form-control" id="exampleInputEmail1" onChange={(e) => setAnswer(e.target.value)} />
+                    </div>
+
+
 
                     <button type="submit" className="btn btn-primary">Register</button>
                 </form>

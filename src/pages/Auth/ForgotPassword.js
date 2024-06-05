@@ -1,33 +1,23 @@
 import React, { useState } from 'react'
 import Layout from '../../components/Layout/Layout'
 import '../../styles/AuthStyles.css';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../../context/auth';
 import toast from 'react-hot-toast';
 
-const Login = () => {
+const ForgotPassword = () => {
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const location = useLocation();
-
-    const [auth, setAuth] = useAuth();
+    const [answer, setAnswer] = useState("");
+    const [newPassword, setNewPassword] = useState("");
 
     const navigate = useNavigate();
     const handleSubmit = async (e) => {
         try {
             e.preventDefault();
-            const res = await axios.post('/auth/login', { email, password })
+            const res = await axios.post('/auth/forgot-password', { email, newPassword, answer })
             if (res && res.data.success) {
-                setAuth({
-                    ...auth,
-                    user: res.data.user,
-                    token: res.data.token
-                })
-                localStorage.setItem('auth', JSON.stringify(res.data))
-
                 toast.success(res.data.message);
-                navigate(location.state || '/')
+                navigate('/login')
             } else {
                 toast.error(res.data.message);
             }
@@ -37,7 +27,7 @@ const Login = () => {
         }
     }
     return (
-        <Layout title={"Login"}>
+        <Layout title={"Forgot Password"}>
             <div className="form-container">
 
                 <form onSubmit={handleSubmit}>
@@ -48,14 +38,16 @@ const Login = () => {
                     </div>
 
                     <div className="mb-3">
-                        <input type="password" placeholder='Password' value={password} className="form-control" id="exampleInputPassword1" onChange={(e) => setPassword(e.target.value)} />
+                        <input type="text" placeholder='What is your favourite color' value={answer} className="form-control" id="exampleInputEmail1" onChange={(e) => setAnswer(e.target.value)} />
                     </div>
 
-                    <div className='mb-3'>
-                        <button type="submit" className="btn btn-primary" onClick={() => { navigate("/forgot-password") }}>Forgot Password</button>
+                    <div className="mb-3">
+                        <input type="password" placeholder='Enter new Password' value={newPassword} className="form-control" id="exampleInputPassword1" onChange={(e) => setNewPassword(e.target.value)} />
                     </div>
 
-                    <button type="submit" className="btn btn-primary">Login</button>
+
+
+                    <button type="submit" className="btn btn-primary">Reset</button>
                 </form>
 
             </div>
@@ -63,4 +55,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default ForgotPassword
