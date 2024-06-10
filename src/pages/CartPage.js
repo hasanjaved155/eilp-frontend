@@ -1,12 +1,18 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Layout from './../components/Layout/Layout';
 import { useCart } from '../context/cart';
 import { useAuth } from '../context/auth';
 import { useNavigate } from 'react-router-dom';
 
+import DropIn from "braintree-web-drop-in-react";
+import axios from 'axios';
+
 const CartPage = () => {
     const [auth, setAuth] = useAuth();
     const [cart, setCart] = useCart();
+    const [clientToken, setClientToken] = useState("");
+    const [instance, setInstance] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
 
     const totalPrize = () => {
@@ -40,6 +46,25 @@ const CartPage = () => {
             console.log(error)
         }
     }
+
+    //get payment gateway token
+    const getToken = async () => {
+        try {
+            const { data } = await axios.get('/product/braintree/token')
+            setClientToken(data?.clientToken)
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        getToken()
+    }, [auth?.token])
+
+    const handlePayment = async () => {
+
+    }
+
     return (
         <Layout>
             <div className="container">
@@ -110,8 +135,23 @@ const CartPage = () => {
                                     </button>
                                 )}
                             </div>
-
                         )}
+
+                        <div className="mt-2">
+                            <DropIn
+                                options={{
+                                    authorization: clientToken,
+                                    paypal: {
+                                        flow: 'valut'
+                                    }
+                                }}
+
+                                onInstance={instanse => setInstance(instanse)}
+                            />
+                            <button className='btn btn-primary' onClick={handlePayment}
+                                disabled={loading || !instance || !auth?.user?.address}>
+                                Make Payment</button>
+                        </div>
                     </div>
                 </div>
             </div>
