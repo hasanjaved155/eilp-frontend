@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../../components/Layout/Layout'
-import UserMenu from '../../components/Layout/UserMenu'
 import axios from 'axios';
 import { useAuth } from '../../context/auth';
 import moment from 'moment';
+import AdminMenu from './../../components/Layout/AdminMenu';
 
-const Orders = () => {
+const AdminOrders = () => {
+    const [status, setStaus] = useState(["Not Process", "Processing", "Shipped", "deliverd", "cancel"])
+    const [changeStatus, setChangeStatus] = useState("");
     const [orders, setOrders] = useState([]);
     const [auth, setAuth] = useAuth();
 
     const getOrders = async () => {
         try {
-            const { data } = await axios.get('/auth/orders')
+            const { data } = await axios.get('/auth/all-orders')
             setOrders(data);
         } catch (error) {
             console.log(error)
@@ -23,11 +25,11 @@ const Orders = () => {
     }, [auth?.token])
 
     return (
-        <Layout title={'All Orders'}>
+        <Layout title={'Admin Orders'}>
             <div className="container-fluid m-3 p-3">
                 <div className="row">
                     <div className="col-md-3">
-                        <UserMenu />
+                        <AdminMenu />
                     </div>
                     <div className="col-md-9">
                         <h1>All Orders</h1>
@@ -88,4 +90,4 @@ const Orders = () => {
     )
 }
 
-export default Orders
+export default AdminOrders

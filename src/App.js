@@ -26,6 +26,7 @@ import ProductDetails from './pages/ProductDetails'
 import Categories from './pages/Categories'
 import CategoryProduct from './pages/CategoryProduct'
 import CartPage from './pages/CartPage'
+import AdminOrders from './pages/Admin/AdminOrders'
 axios.defaults.baseURL = "http://localhost:8080";
 
 
@@ -53,6 +54,8 @@ const App = () => {
           <Route path='admin/products' element={<Products />} />
           <Route path='admin/product/:slug' element={<UpdateProduct />} />
           <Route path='admin/users' element={<Users />} />
+          <Route path='admin/orders' element={<AdminOrders />} />
+
 
         </Route>
         <Route path='/forgot-password' element={<ForgotPassword />} />
